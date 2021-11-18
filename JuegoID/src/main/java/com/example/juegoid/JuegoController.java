@@ -39,20 +39,28 @@ public class JuegoController {
             animation.play();
             switch (e.getCode()) {
                 case A:
+                    moverPlayerL();
                     break;
                 case W:
+                    moverPlayerT();
                     break;
                 case S:
+                    moverPlayerB();
                     break;
                 case D:
+                    moverPlayerR();
                     break;
                 case LEFT:
+                    moverPlayerL();
                     break;
                 case UP:
+                    moverPlayerT();
                     break;
                 case DOWN:
+                    moverPlayerB();
                     break;
                 case RIGHT:
+                    moverPlayerR();
                     break;
             }
 
@@ -64,7 +72,6 @@ public class JuegoController {
 
     private void inicializarJuego() {
         this.animation = new Timeline(new KeyFrame(Duration.millis(17), t -> {
-            moverPlayerR();
             detectarColision();
         }));
         animation.setCycleCount(Animation.INDEFINITE);
@@ -94,12 +101,12 @@ public class JuegoController {
 
     private void moverPlayerT() {
 
-        player.setTranslateY(player.getTranslateY() + 1);
+        player.setTranslateY(player.getTranslateY() - 1);
     }
 
     private void moverPlayerB() {
 
-        player.setTranslateY(player.getTranslateY() - 1);
+        player.setTranslateY(player.getTranslateY() + 1);
     }
 
 
