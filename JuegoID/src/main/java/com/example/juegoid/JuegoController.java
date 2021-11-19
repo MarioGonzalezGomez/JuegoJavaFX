@@ -3,7 +3,6 @@ package com.example.juegoid;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.Event;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -16,11 +15,15 @@ public class JuegoController {
     private Rectangle topWall;
     private Rectangle botWall;
 
-    private double movement;
+    private double velocidad = 1;
+    private int direction = 1;
 
     private Rectangle player;
 
     private Timeline animation;
+    private double desplazamientoX;
+    private double desplazamientoY;
+    private int saltarPixel = 2;
 
     public JuegoController(Rectangle leftWall, Rectangle rightWall, Rectangle topWall, Rectangle botWall, Rectangle player, StackPane principal) {
         this.leftWall = leftWall;
@@ -29,85 +32,86 @@ public class JuegoController {
         this.botWall = botWall;
         this.player = player;
         this.principal = principal;
-        this.movement = 1;
+        this.velocidad = 2;
         inicializarJuego();
         inicializarController();
     }
 
     private void inicializarController() {
         principal.setOnKeyPressed(e -> {
-            animation.play();
             switch (e.getCode()) {
                 case A:
-                    moverPlayerL();
+                case LEFT:
+                    desplazamientoX = -1;
                     break;
                 case W:
-                    moverPlayerT();
+                case UP:
+                    desplazamientoY = -1;
                     break;
                 case S:
-                    moverPlayerB();
+                case DOWN:
+                    desplazamientoY = +1;
                     break;
                 case D:
-                    moverPlayerR();
-                    break;
-                case LEFT:
-                    moverPlayerL();
-                    break;
-                case UP:
-                    moverPlayerT();
-                    break;
-                case DOWN:
-                    moverPlayerB();
-                    break;
                 case RIGHT:
-                    moverPlayerR();
+                    desplazamientoX = +1;
+                    break;
+                case SPACE:
+                    animation.play();
                     break;
             }
 
         });
-
-        principal.setOnKeyReleased(e -> animation.stop());
+        principal.setOnKeyReleased(e -> {
+            if (e.getCode().toString().matches("A|W|S|D|RIGHT|LEFT|UP|DOWN")) {
+                desplazamientoY = 0;
+                desplazamientoX = 0;
+            }
+        });
         principal.setFocusTraversable(true);
     }
 
     private void inicializarJuego() {
         this.animation = new Timeline(new KeyFrame(Duration.millis(17), t -> {
-            detectarColision();
+            moverPlayer();
+            detectarColisionX();
+            detectarColisionY();
         }));
         animation.setCycleCount(Animation.INDEFINITE);
         //Esto se debería poner después de pulsar algún botón de inicio
-        //animation.play();
     }
 
-    private void detectarColision() {
+    private void detectarColisionX() {
         if (player.getBoundsInParent().intersects(leftWall.getBoundsInParent()) ||
-                player.getBoundsInParent().intersects(rightWall.getBoundsInParent()) ||
-                player.getBoundsInParent().intersects(topWall.getBoundsInParent()) ||
-                player.getBoundsInParent().intersects(botWall.getBoundsInParent())) {
-            player.setTranslateX(0);
-            player.setTranslateY(0);
+                player.getBoundsInParent().intersects(rightWall.getBoundsInParent())) {
+            if (player.getTranslateX() < 0) {
+                player.setTranslateX(saltarPixel * -1 + player.getTranslateX() * -1);
+            } else {
+                player.setTranslateX(saltarPixel + player.getTranslateX() * -1);
+            }
         }
     }
 
-    private void moverPlayerR() {
-
-        player.setTranslateX(player.getTranslateX() + 1);
+    private void detectarColisionY() {
+        if (player.getBoundsInParent().intersects(topWall.getBoundsInParent()) ||
+                player.getBoundsInParent().intersects(botWall.getBoundsInParent())) {
+            if (player.getTranslateY() < 0) {
+                player.setTranslateY(saltarPixel * -1 + player.getTranslateY() * -1);
+            } else {
+                player.setTranslateY(saltarPixel + player.getTranslateY() * -1);
+            }
+        }
     }
 
-    private void moverPlayerL() {
-
-        player.setTranslateX(player.getTranslateX() - 1);
+    private void moverPlayer() {
+        player.setTranslateX(player.getTranslateX() + desplazamientoX * velocidad);
+        player.setTranslateY(player.getTranslateY() + desplazamientoY * velocidad);
     }
 
-    private void moverPlayerT() {
+    private double magnitudDiagonal() {
+        //movimiento X e Y es un valor 1, -1 para indicar la dirección del movimiento
+       // desplazamientoX = movimientoX / Math.hypot(movimientoX, movimientoY);
 
-        player.setTranslateY(player.getTranslateY() - 1);
+        return Math.sqrt(desplazamientoX * desplazamientoX + desplazamientoY * desplazamientoY);
     }
-
-    private void moverPlayerB() {
-
-        player.setTranslateY(player.getTranslateY() + 1);
-    }
-
-
 }

@@ -11,7 +11,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
 
         Scene scene = new Scene(new Juego(), 500, 700);
-        stage.setTitle("Cagandose a piñas");
+        stage.setTitle("Láseres al vacío");
         stage.setScene(scene);
         stage.show();
     }
