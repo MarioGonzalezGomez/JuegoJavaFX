@@ -34,6 +34,7 @@ public class Vector {
     public void setLength(double l) {
         double currentLength = this.getLength();
         if (currentLength == 0) {
+            this.set(l,0);
         } else {
             this.multiply(1 / currentLength);
             this.multiply(l);

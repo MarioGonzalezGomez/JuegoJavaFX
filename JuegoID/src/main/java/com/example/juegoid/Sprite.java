@@ -37,6 +37,17 @@ public class Sprite {
         return this.limites.coliasion(sprite2.getLimites());
     }
 
+    public void evitarSalida(double screenWidth, double screenHeight) {
+        if (this.position.x + this.image.getWidth() < 0)
+            this.position.x = screenWidth;
+        if (this.position.x > screenWidth)
+            this.position.x = -this.image.getWidth();
+        if (this.position.y + this.image.getHeight() < 0)
+            this.position.y = screenHeight;
+        if (this.position.y > screenHeight)
+            this.position.y = -this.image.getHeight();
+    }
+
     public void update(double time) {
         this.position.add(this.speed.x * time, this.speed.y * time);
     }
