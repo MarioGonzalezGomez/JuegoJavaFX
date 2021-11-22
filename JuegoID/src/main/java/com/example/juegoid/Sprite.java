@@ -37,9 +37,8 @@ public class Sprite {
         return this.limites.coliasion(sprite2.getLimites());
     }
 
-    public boolean update(double time) {
+    public void update(double time) {
         this.position.add(this.speed.x * time, this.speed.y * time);
-        return false;
     }
 
     public void render(GraphicsContext gc) {
