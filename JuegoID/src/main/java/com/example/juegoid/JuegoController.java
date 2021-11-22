@@ -108,9 +108,19 @@ public class JuegoController {
         player.setTranslateY(player.getTranslateY() + desplazamientoY * velocidad);
     }
 
-    private double magnitudDiagonal() {
+    private double moverDiagonal() {
         //movimiento X e Y es un valor 1, -1 para indicar la dirección del movimiento
-       // desplazamientoX = movimientoX / Math.hypot(movimientoX, movimientoY);
+        // desplazamientoX = movimientoX / Math.hypot(movimientoX, movimientoY);
+
+        //valocidad = -sen45ª (para la velocidad de y)
+        //velocidad = cos45ª (para x)
+
+        //if(movimientoX!=0 || moviminetoY!=0)
+        //desplazaminetoX= movimientoX/Math.hypot(movimientoX,movimientoY)
+
+        player.setTranslateX(player.getTranslateX() + desplazamientoX * velocidad);
+
+        //y=v*Math.sen(Math.toRadius(45)) o en vez de 45, la rotación actual de la torreta
 
         return Math.sqrt(desplazamientoX * desplazamientoX + desplazamientoY * desplazamientoY);
     }
