@@ -38,14 +38,14 @@ public class Sprite {
     }
 
     public void evitarSalida(double screenWidth, double screenHeight) {
-        if (this.position.x + this.image.getWidth() < 0)
-            this.position.x = screenWidth;
-        if (this.position.x > screenWidth)
-            this.position.x = -this.image.getWidth();
-        if (this.position.y + this.image.getHeight() < 0)
+        if (this.position.x + this.image.getWidth() / 2 < 0)
+            this.position.x = screenWidth + this.image.getWidth() / 2;
+        if (this.position.x > screenWidth + this.image.getWidth() / 2)
+            this.position.x = -this.image.getWidth() / 2;
+        if (this.position.y + this.image.getHeight() / 2 < 0)
             this.position.y = screenHeight;
         if (this.position.y > screenHeight)
-            this.position.y = -this.image.getHeight();
+            this.position.y = -this.image.getHeight() / 2;
     }
 
     public void update(double time) {
