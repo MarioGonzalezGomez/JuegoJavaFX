@@ -23,7 +23,7 @@ public class Rectangle {
         this.height = h;
     }
 
-    public boolean coliasion(Rectangle rec2) {
+    public boolean colisiona(Rectangle rec2) {
 
         boolean noColision = this.x + this.width < rec2.x || rec2.x + rec2.width < this.x ||
                 this.y + this.height < rec2.y || rec2.y + this.height < this.y;

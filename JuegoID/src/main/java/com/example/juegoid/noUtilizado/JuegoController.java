@@ -1,4 +1,4 @@
-package com.example.juegoid;
+package com.example.juegoid.noUtilizado;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;

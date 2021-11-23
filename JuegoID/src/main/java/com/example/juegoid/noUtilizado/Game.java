@@ -1,7 +1,7 @@
-package com.example.juegoid;
+/*package com.example.juegoid.noUtilizado;
 
+import com.example.juegoid.Sprite;
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,82 +9,59 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
+
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
-public class App extends Application {
-    int score;
+public class Game extends BorderPane {
+    public int score;
 
+    public Game() {
+        iniciarElementos();
+    }
 
-    @Override
-    public void start(Stage stage) {
-        stage.setTitle("Láseres al vacío");
-        BorderPane root = new BorderPane();
-        Scene mainScene = new Scene(root);
-        stage.setScene(mainScene);
-
-
+    private void iniciarElementos() {
         int height = 600;
         int width = 800;
         int rotationSpaceship = 270;
-        int asteroidCount = 6;
-        String rutaImages = "file:///" + System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources"
-                + File.separator + "images" + File.separator;
 
         Canvas canvas = new Canvas(width, height);
         GraphicsContext context = canvas.getGraphicsContext2D();
-        root.setCenter(canvas);
+        this.setCenter(canvas);
 
-        ArrayList<String> keyPressed = new ArrayList<>();
-
-        ArrayList<String> onlyOneKey = new ArrayList<>();
-
-
-        mainScene.setOnKeyPressed((KeyEvent event) -> {
-                    String keyName = event.getCode().toString();
-                    if (!keyPressed.contains(keyName)) {
-                        keyPressed.add(keyName);
-                        onlyOneKey.add(keyName);
-                    }
-                }
-        );
-
-        mainScene.setOnKeyReleased((KeyEvent event) -> {
-                    String keyName = event.getCode().toString();
-                    if (keyPressed.contains(keyName)) {
-                        keyPressed.remove(keyName);
-                    }
-                }
-        );
-
-
-        Sprite background = new Sprite(rutaImages + "estelarMorado.jpg");
-        //Para que nuestro personaje aparezca en el centro de la pantalla
+        Sprite background = loadSprite("estelarMorado.jpg");
         background.position.set(width / 2, height / 2);
 
-
-        Sprite spaceship = new Sprite(rutaImages + "playerShip1_blue.png");
+        Sprite spaceship = loadSprite("playerShip1_blue.png");
         spaceship.position.set(width / 2, height / 1.25);
 
-        ArrayList<Sprite> laserList = new ArrayList<>();
-        ArrayList<Sprite> asteroidList = new ArrayList<>();
+        ArrayList<String> keyPressed = new ArrayList<>();
+      //keyListeners(mainScene, keyPressed);
 
-        for (int i = 0; i < asteroidCount; i++) {
-            Sprite asteroid = new Sprite(rutaImages + "meteorMed.png");
-            //TODO: poner estos números como derivados de las medidas iniciales
-            //TODO: Quizá hacer que vayan girando
-            double x = Math.random() * 500 + 300;
-            double y = Math.random() * 400 + 100;
-            asteroid.position.set(x, y);
-            double angle = Math.random() * 360;
-            asteroid.speed.setLength(50);
-            asteroid.speed.setAngle(angle);
-            asteroidList.add(asteroid);
-        }
+
+        ArrayList<Sprite> asteroidList = new ArrayList<>();
+        loadAsteroids(asteroidList);
+
+        ArrayList<Sprite> laserList = new ArrayList<>();
 
         score = 0;
+
+    }
+
+    public void start() {
+
+
+        //stage.setTitle("Láseres al vacío");
+        Scene mainScene = new Scene(this);
+        // stage.setScene(mainScene);
+
+
+
+//ArrayList<String> onlyOneKey = new ArrayList<>();
+
+
 
         AnimationTimer gameloop = new AnimationTimer() {
             @Override
@@ -106,15 +83,11 @@ public class App extends Application {
                 }
 
                 if (keyPressed.contains("SPACE")) {
-                    Sprite laser = new Sprite(rutaImages + "laserBlue.png");
-                    laser.position.set(spaceship.position.x, spaceship.position.y);
-                    laser.speed.setLength(400);
-                    laser.speed.setAngle(spaceship.rotation + rotationSpaceship);
-                    laserList.add(laser);
+                    shootLaser(spaceship, rotationSpaceship, laserList);
                 }
 
                 //Para limpiar la generación de lasers
-                onlyOneKey.clear();
+                //onlyOneKey.clear();
 
 
                 spaceship.update(1 / 60.0);
@@ -167,7 +140,57 @@ public class App extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
-        launch();
+    private Sprite loadSprite(String nombreImagen) {
+        String rutaImages = "file:///" + System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources"
+                + File.separator + "images" + File.separator;
+        Sprite sprite = new Sprite(rutaImages + nombreImagen);
+        return sprite;
     }
-}
+
+    private void loadAsteroids(List<Sprite> asteroidList) {
+        int asteroidCount = 6;
+
+        for (int i = 0; i < asteroidCount; i++) {
+            Sprite asteroid = loadSprite("meteorMed.png");
+            //TODO: poner estos números como derivados de las medidas iniciales
+            //TODO: Quizá hacer que vayan girando
+            //TODO: Que se vayan generando de varios tamaños
+            //TODO: Quizá, que se generen más a lo lago del tiempo
+            double x = Math.random() * 500 + 300;
+            double y = Math.random() * 400 + 100;
+            asteroid.position.set(x, y);
+            double angle = Math.random() * 360;
+            asteroid.speed.setLength(50);
+            asteroid.speed.setAngle(angle);
+            asteroidList.add(asteroid);
+        }
+    }
+
+    private void shootLaser(Sprite spaceship, int rotationSpaceship, List<Sprite> laserList) {
+        Sprite laser = loadSprite("laserBlue.png");
+        laser.position.set(spaceship.position.x, spaceship.position.y);
+        laser.speed.setLength(400);
+        laser.speed.setAngle(spaceship.rotation + rotationSpaceship);
+        laserList.add(laser);
+    }
+
+    private void keyListeners(Scene mainScene, List<String> keyPressed) {
+        mainScene.setOnKeyPressed((KeyEvent event) -> {
+                    String keyName = event.getCode().toString();
+                    if (!keyPressed.contains(keyName)) {
+                        keyPressed.add(keyName);
+                        // onlyOneKey.add(keyName);
+                    }
+                }
+        );
+
+        mainScene.setOnKeyReleased((KeyEvent event) -> {
+                    String keyName = event.getCode().toString();
+                    if (keyPressed.contains(keyName)) {
+                        keyPressed.remove(keyName);
+                    }
+                }
+        );
+    }
+
+}*/

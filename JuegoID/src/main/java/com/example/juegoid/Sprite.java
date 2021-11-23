@@ -33,8 +33,8 @@ public class Sprite {
         return this.limites;
     }
 
-    public boolean colisionNave(Sprite sprite2) {
-        return this.limites.coliasion(sprite2.getLimites());
+    public boolean colisiona(Sprite sprite2) {
+        return this.limites.colisiona(sprite2.getLimites());
     }
 
     public void evitarSalida(double screenWidth, double screenHeight) {
