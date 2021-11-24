@@ -110,6 +110,7 @@ public class App extends Application {
                     laser.position.set(spaceship.position.x, spaceship.position.y);
                     laser.speed.setLength(400);
                     laser.speed.setAngle(spaceship.rotation + rotationSpaceship);
+                    laser.rotation = spaceship.rotation;
                     laserList.add(laser);
                 }
 
