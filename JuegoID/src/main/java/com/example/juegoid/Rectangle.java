@@ -25,8 +25,9 @@ public class Rectangle {
 
     public boolean colisiona(Rectangle rec2) {
 
+
         boolean noColision = this.x + this.width < rec2.x || rec2.x + rec2.width < this.x ||
-                this.y + this.height < rec2.y || rec2.y + this.height < this.y;
+               this.y + this.height < rec2.y || rec2.y + this.height < this.y;
         return !noColision;
     }
 }
