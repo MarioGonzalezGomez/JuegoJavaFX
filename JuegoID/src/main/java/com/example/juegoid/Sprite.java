@@ -57,9 +57,9 @@ public class Sprite {
             this.position.y = -this.image.getHeight() / 2;
     }
 
-    public void update(double time) {
+   /* public void update(double time) {
         this.position.add(this.speed.x * time, this.speed.y * time);
-    }
+    }*/
 
     public void update() {
         this.position.add(this.speed.x, this.speed.y);

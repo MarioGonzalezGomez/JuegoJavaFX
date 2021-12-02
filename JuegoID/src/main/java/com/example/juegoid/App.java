@@ -33,7 +33,7 @@ public class App extends Application {
         int height = 600;
         int width = 800;
         int rotationSpaceship = 270;
-        int asteroidCount = 3;
+        int asteroidCount = 6;
         String rutaImages = "file:///" + System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources"
                 + File.separator + "images" + File.separator;
 
@@ -83,7 +83,7 @@ public class App extends Application {
             double y = Math.random() * 400 + 100;
             asteroid.position.set(x, y);
             double angle = Math.random() * 360;
-            asteroid.speed.setLength(50);
+            asteroid.speed.setLength(4);
             asteroid.speed.setAngle(angle);
             asteroidList.add(asteroid);
         }
@@ -98,10 +98,10 @@ public class App extends Application {
                 spaceship.rotation += 3;
             }
             if (keyPressed.contains("UP") || keyPressed.contains("W")) {
-                spaceship.speed.setLength(150);
+                spaceship.speed.setLength(5);
                 spaceship.speed.setAngle(spaceship.rotation + rotationSpaceship);
             } else if (keyPressed.contains("DOWN") || keyPressed.contains("S")) {
-                spaceship.speed.setLength(50);
+                spaceship.speed.setLength(2.5);
                 spaceship.speed.setAngle(spaceship.rotation + rotationSpaceship + 180);
             } else {
                 spaceship.speed.setLength(0);
@@ -110,7 +110,7 @@ public class App extends Application {
             if (keyPressed.contains("SPACE")) {
                 Sprite laser = new Sprite(rutaImages + "laserBlue.png");
                 laser.position.set(spaceship.position.x, spaceship.position.y);
-                laser.speed.setLength(400);
+                laser.speed.setLength(3.5);
                 laser.speed.setAngle(spaceship.rotation + rotationSpaceship);
                 laser.rotation = spaceship.rotation;
                 laserList.add(laser);
@@ -172,6 +172,7 @@ public class App extends Application {
             context.fillText(text, textX, textY);
             context.strokeText(text, textX, textY);
         }));
+
         /*AnimationTimer gameloop = new AnimationTimer() {
             @Override
             public void handle(long l) {
