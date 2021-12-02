@@ -1,7 +1,6 @@
 package com.example.juegoid;
 
 import javafx.animation.Animation;
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -10,6 +9,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -87,10 +89,18 @@ public class App extends Application {
             asteroid.speed.setAngle(angle);
             asteroidList.add(asteroid);
         }
-
+// "file:///"
+        String rutaSound = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources"
+                + File.separator + "sounds" + File.separator;
+        Media cancion = new Media(rutaSound + "spaceOdyssey.mp3");
+        MediaPlayer cancionmp = new MediaPlayer(cancion);
+        cancionmp.play();
+        AudioClip explosion = new AudioClip(rutaSound + "explosion.mp3");
+        AudioClip laserSound = new AudioClip(rutaSound + "laserSound.mp3");
         score = 0;
 
-        var gameLoop = new Timeline(new KeyFrame(Duration.millis(17),a->{
+        var gameLoop = new Timeline(new KeyFrame(Duration.millis(17), a -> {
+
             if (keyPressed.contains("LEFT") || keyPressed.contains("A")) {
                 spaceship.rotation -= 3;
             }
