@@ -50,6 +50,7 @@ public class App extends Application {
 
         mainScene.setOnKeyPressed((KeyEvent event) -> {
                     String keyName = event.getCode().toString();
+
                     if (!keyPressed.contains(keyName)) {
                         keyPressed.add(keyName);
                         onlyOneKey.add(keyName);
@@ -89,14 +90,14 @@ public class App extends Application {
             asteroid.speed.setAngle(angle);
             asteroidList.add(asteroid);
         }
-// "file:///"
-        String rutaSound = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources"
-                + File.separator + "sounds" + File.separator;
-        Media cancion = new Media(rutaSound + "spaceOdyssey.mp3");
+
+        Media cancion = new Media(getClass().getResource("/sounds/spaceOdyssey.mp3").toString());
+
         MediaPlayer cancionmp = new MediaPlayer(cancion);
         cancionmp.play();
-        AudioClip explosion = new AudioClip(rutaSound + "explosion.mp3");
-        AudioClip laserSound = new AudioClip(rutaSound + "laserSound.mp3");
+        AudioClip explosion = new AudioClip(getClass().getResource("/sounds/explosion.mp3").toString());
+        AudioClip laserSound = new AudioClip(getClass().getResource("/sounds/laserSound.mp3").toString());
+        laserSound.setVolume(0.15);
         score = 0;
 
         var gameLoop = new Timeline(new KeyFrame(Duration.millis(17), a -> {
@@ -124,6 +125,7 @@ public class App extends Application {
                 laser.speed.setAngle(spaceship.rotation + rotationSpaceship);
                 laser.rotation = spaceship.rotation;
                 laserList.add(laser);
+                laserSound.play();
             }
 
             //Para limpiar la generación de lasers
@@ -144,8 +146,9 @@ public class App extends Application {
                 for (int asteroidNum = 0; asteroidNum < asteroidList.size(); asteroidNum++) {
                     Sprite asteroid = asteroidList.get(asteroidNum);
                     if (laser.colisiona(asteroid)) {
-                        laserList.remove(laserNum);
+                        laserList.remove(laserList.get(laserNum));
                         asteroidList.remove(asteroidNum);
+                        explosion.play();
                         score += 100;
                     }
                     //TODO:se podría implementar algo de este estilo
@@ -163,11 +166,11 @@ public class App extends Application {
             spaceship.render(context);
             for (Sprite laser : laserList) {
 
-                System.out.println("Laser: " + laser.getLimites());
+                laser.getLimites();
                 laser.render(context);
             }
             for (Sprite asteroid : asteroidList) {
-                System.out.println("Asteroide: " + asteroid.getLimites());
+                asteroid.getLimites();
                 asteroid.render(context);
             }
 
