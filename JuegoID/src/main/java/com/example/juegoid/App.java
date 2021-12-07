@@ -80,8 +80,6 @@ public class App extends Application {
 
         for (int i = 0; i < asteroidCount; i++) {
             Sprite asteroid = new Sprite(rutaImages + "meteorMed.png");
-            //TODO: poner estos números como derivados de las medidas iniciales
-            //TODO: Quizá hacer que vayan girando
             double x = Math.random() * 500 + 300;
             double y = Math.random() * 400 + 100;
             asteroid.position.set(x, y);
@@ -109,10 +107,10 @@ public class App extends Application {
                 spaceship.rotation += 3;
             }
             if (keyPressed.contains("UP") || keyPressed.contains("W")) {
-                spaceship.speed.setLength(5);
+                spaceship.speed.setLength(3.5);
                 spaceship.speed.setAngle(spaceship.rotation + rotationSpaceship);
             } else if (keyPressed.contains("DOWN") || keyPressed.contains("S")) {
-                spaceship.speed.setLength(2.5);
+                spaceship.speed.setLength(2);
                 spaceship.speed.setAngle(spaceship.rotation + rotationSpaceship + 180);
             } else {
                 spaceship.speed.setLength(0);
@@ -127,13 +125,12 @@ public class App extends Application {
                 laserList.add(laser);
                 laserSound.play();
             }
-
-            //Para limpiar la generación de lasers
             onlyOneKey.clear();
 
 
             spaceship.update();
             for (Sprite asteroid : asteroidList) {
+                asteroid.rotation -= 2;
                 asteroid.update();
                 asteroid.evitarSalida(width, height);
             }
@@ -151,12 +148,6 @@ public class App extends Application {
                         explosion.play();
                         score += 100;
                     }
-                    //TODO:se podría implementar algo de este estilo
-                    //if (spaceship.colisiona(asteroid)) {
-                    //parpadea() Con fadetransition
-                    //quitarVida()
-                    //ruidoColisión()
-                    //}
                 }
             }
 
@@ -186,91 +177,7 @@ public class App extends Application {
             context.strokeText(text, textX, textY);
         }));
 
-        /*AnimationTimer gameloop = new AnimationTimer() {
-            @Override
-            public void handle(long l) {
-                if (keyPressed.contains("LEFT") || keyPressed.contains("A")) {
-                    spaceship.rotation -= 3;
-                }
-                if (keyPressed.contains("RIGHT") || keyPressed.contains("D")) {
-                    spaceship.rotation += 3;
-                }
-                if (keyPressed.contains("UP") || keyPressed.contains("W")) {
-                    spaceship.speed.setLength(150);
-                    spaceship.speed.setAngle(spaceship.rotation + rotationSpaceship);
-                } else if (keyPressed.contains("DOWN") || keyPressed.contains("S")) {
-                    spaceship.speed.setLength(50);
-                    spaceship.speed.setAngle(spaceship.rotation + rotationSpaceship + 180);
-                } else {
-                    spaceship.speed.setLength(0);
-                }
 
-                if (keyPressed.contains("SPACE")) {
-                    Sprite laser = new Sprite(rutaImages + "laserBlue.png");
-                    laser.position.set(spaceship.position.x, spaceship.position.y);
-                    laser.speed.setLength(400);
-                    laser.speed.setAngle(spaceship.rotation + rotationSpaceship);
-                    laser.rotation = spaceship.rotation;
-                    laserList.add(laser);
-                }
-
-                //Para limpiar la generación de lasers
-                onlyOneKey.clear();
-
-
-                spaceship.update(1 / 200.0);
-                for (Sprite asteroid : asteroidList) {
-                    asteroid.update(1 / 200.0);
-                    asteroid.evitarSalida(width, height);
-                }
-                for (Sprite laser : laserList) {
-                    laser.update(1 / 200.0);
-                }
-
-                for (int laserNum = 0; laserNum < laserList.size(); laserNum++) {
-                    Sprite laser = laserList.get(laserNum);
-                    for (int asteroidNum = 0; asteroidNum < asteroidList.size(); asteroidNum++) {
-                        Sprite asteroid = asteroidList.get(asteroidNum);
-                        if (laser.colisiona(asteroid)) {
-                            laserList.remove(laserNum);
-                            asteroidList.remove(asteroidNum);
-                            score += 100;
-                        }
-                        //TODO:se podría implementar algo de este estilo
-                        //if (spaceship.colisiona(asteroid)) {
-                        //parpadea() Con fadetransition
-                        //quitarVida()
-                        //ruidoColisión()
-                        //}
-                    }
-                }
-
-
-                spaceship.evitarSalida(width, height);
-                background.render(context);
-                spaceship.render(context);
-                for (Sprite laser : laserList) {
-
-                    System.out.println("Laser: " + laser.getLimites());
-                    laser.render(context);
-                }
-                for (Sprite asteroid : asteroidList) {
-                    System.out.println("Asteroide: " + asteroid.getLimites());
-                    asteroid.render(context);
-                }
-
-                //Para dibujar el marcador en la pantalla
-                context.setFill(Color.WHITE);
-                context.setStroke(Color.GREEN);
-                context.setFont(new Font("Arial Black", 48));
-                context.setLineWidth(3);
-                String text = "Score: " + score;
-                int textX = 500;
-                int textY = 50;
-                context.fillText(text, textX, textY);
-                context.strokeText(text, textX, textY);
-            }
-        }*/
 
         gameLoop.setCycleCount(Animation.INDEFINITE);
         gameLoop.play();
