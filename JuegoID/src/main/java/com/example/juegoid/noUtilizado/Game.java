@@ -4,7 +4,6 @@ import com.example.juegoid.Sprite;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
@@ -20,6 +19,7 @@ import javafx.util.Duration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Game extends BorderPane {
     public int score;
@@ -47,11 +47,6 @@ public class Game extends BorderPane {
         spaceship.position.set(width / 2, height / 1.25);
 
 
-        ArrayList<String> keyPressed = new ArrayList<>();
-        keyListeners(mainScene, keyPressed);
-        ArrayList<String> onlyOneKey = new ArrayList<>();
-
-
         ArrayList<Sprite> asteroidList = loadAsteroids();
 
         ArrayList<Sprite> laserList = new ArrayList<>();
@@ -61,38 +56,12 @@ public class Game extends BorderPane {
         AudioClip laserSound = new AudioClip(getClass().getResource("/sounds/laserSound.mp3").toString());
         laserSound.setVolume(0.15);
 
-        Timeline gameLoop = gameLoop(context, keyPressed, spaceship, laserList, onlyOneKey, laserSound, explosion, asteroidList, background);
+        Timeline gameLoop = gameLoop(context, spaceship, laserList, laserSound, explosion, asteroidList, background);
         gameLoop.setCycleCount(Animation.INDEFINITE);
         gameLoop.play();
 
-        score = 0;
-        marcador(context);
-
-    }
-
-    public void start() {
-        public void start (Stage stage){
-            stage.setTitle("Láseres al vacío");
-            BorderPane root = new BorderPane();
-            Scene mainScene = new Scene(root);
-            stage.setScene(mainScene);
 
 
-            int height = 600;
-            int width = 800;
-            int rotationSpaceship = 270;
-
-
-            String rutaImages = "file:///" + System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources"
-                    + File.separator + "images" + File.separator;
-
-            Canvas canvas = new Canvas(width, height);
-            GraphicsContext context = canvas.getGraphicsContext2D();
-            root.setCenter(canvas);
-
-
-            stage.show();
-        }
     }
 
     private Sprite loadSprite(String nombreImagen) {
@@ -103,7 +72,6 @@ public class Game extends BorderPane {
     }
 
     private ArrayList<Sprite> loadAsteroids() {
-        int asteroidCount = 6;
         ArrayList<Sprite> asteroidList = new ArrayList<>();
         for (int i = 0; i < asteroidCount; i++) {
             Sprite asteroid = loadSprite("meteorMed.png");
@@ -154,8 +122,12 @@ public class Game extends BorderPane {
         onlyOneKey.clear();
     }
 
-    private Timeline gameLoop(GraphicsContext context, ArrayList<String> keyPressed, Sprite spaceship, ArrayList<Sprite> laserList, ArrayList<String> onlyOneKey, AudioClip laserSound, AudioClip explosion, ArrayList<Sprite> asteroidList, Sprite background) {
+    private Timeline gameLoop(GraphicsContext context, Sprite spaceship, ArrayList<Sprite> laserList, AudioClip laserSound, AudioClip explosion, ArrayList<Sprite> asteroidList, Sprite background) {
         var gameLoop = new Timeline(new KeyFrame(Duration.millis(17), a -> {
+
+            ArrayList<String> keyPressed = new ArrayList<>();
+            ArrayList<String> onlyOneKey = new ArrayList<>();
+            keyListeners(context.getCanvas(), keyPressed, onlyOneKey);
 
             controles(keyPressed, spaceship, laserList, onlyOneKey, laserSound);
 
@@ -188,7 +160,6 @@ public class Game extends BorderPane {
             background.render(context);
             spaceship.render(context);
             for (Sprite laser : laserList) {
-
                 laser.getLimites();
                 laser.render(context);
             }
@@ -196,6 +167,9 @@ public class Game extends BorderPane {
                 asteroid.getLimites();
                 asteroid.render(context);
             }
+
+            score = 0;
+            marcador(context);
 
         }));
         return gameLoop;
@@ -219,17 +193,17 @@ public class Game extends BorderPane {
         context.strokeText(text, textX, textY);
     }
 
-    private void keyListeners(Scene mainScene, List<String> keyPressed) {
-        mainScene.setOnKeyPressed((KeyEvent event) -> {
+    private void keyListeners(Canvas canvas, List<String> keyPressed, List<String> onlyOneKey) {
+        canvas.setOnKeyPressed((KeyEvent event) -> {
                     String keyName = event.getCode().toString();
                     if (!keyPressed.contains(keyName)) {
                         keyPressed.add(keyName);
-                        // onlyOneKey.add(keyName);
+                        onlyOneKey.add(keyName);
                     }
                 }
         );
 
-        mainScene.setOnKeyReleased((KeyEvent event) -> {
+        canvas.setOnKeyReleased((KeyEvent event) -> {
                     String keyName = event.getCode().toString();
                     if (keyPressed.contains(keyName)) {
                         keyPressed.remove(keyName);
